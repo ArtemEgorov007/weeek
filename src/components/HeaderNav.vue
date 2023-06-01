@@ -12,15 +12,21 @@
 					</div>
 					<div class="header__languages">
 						<select class="header__language-select">
-							<option class="header__language-option" value="en">
-								<img class="header__language-images" src="@/assets/svg/logotip.svg" alt="English" />
-								EN
-							</option>
-							<option class="header__language-option" value="ru">
-								<img class="header__language-image" src="" alt="Russian" />
-								RU
-							</option>
+							<option class="header__language-option" value="en">🇺🇸&emsp;EN</option>
+							<option class="header__language-option" value="ru">🇷🇺&emsp;RU</option>
 						</select>
+					</div>
+					<div class="header__languages">
+						<div class="header__language" @click="toggleDropdown">
+							<img src="@/assets/svg/English.svg" alt="English" />
+							<span class="header__language-text">{{ currentLanguage }}</span>
+							<ul v-if="isDropdownOpen" class="language-dropdown">
+								<li v-for="language in languages" :key="language.code" @click="selectLanguage(language)">
+									<img :src="language.icon" :alt="language.name" />
+									<span>{{ language.code }}</span>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -30,7 +36,27 @@
 
 <script>
 export default {
-	name: "HeaderNav"
+	data() {
+		return {
+			isDropdownOpen: false,
+			currentLanguage: "EN",
+			languages: [
+				{ code: "EN", name: "English", icon: "@/assets/svg/English.svg" },
+				{ code: "RU", name: "Russian", icon: "@/assets/svg/English.svg" }
+				// Add more languages as needed
+			]
+		};
+	},
+	methods: {
+		toggleDropdown() {
+			this.isDropdownOpen = !this.isDropdownOpen;
+		},
+		selectLanguage(language) {
+			this.currentLanguage = language.code;
+			this.isDropdownOpen = false;
+			// Perform any other actions when language is selected
+		}
+	}
 };
 </script>
 
@@ -109,18 +135,57 @@ export default {
 		padding: 5px;
 		cursor: pointer;
 		font-size: 14px;
-		font-weight: bold;
+		font-weight: 700;
 		color: #7b8193;
 	}
 
 	&__language-option {
-		padding: 5px;
+		padding: 15px;
+		flex-wrap: wrap;
 		cursor: pointer;
 	}
 
 	&__language-images {
 		width: 16px;
 		height: 16px;
+	}
+
+	custom-select {
+		position: relative;
+		display: inline-block;
+	}
+
+	.select-trigger {
+		padding: 8px;
+		border: 1px solid #ccc;
+		background-color: #fff;
+		cursor: pointer;
+	}
+
+	.dropdown-list {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		max-height: 200px;
+		overflow-y: auto;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		z-index: 999;
+		display: none;
+	}
+
+	.dropdown-item {
+		padding: 8px;
+		cursor: pointer;
+	}
+
+	.dropdown-item:hover {
+		background-color: #f9f9f9;
+	}
+
+	.custom-select.active .dropdown-list {
+		display: block;
 	}
 }
 </style>
